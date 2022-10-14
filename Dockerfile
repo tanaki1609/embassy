@@ -13,6 +13,6 @@ COPY crontab /etc/cron.d/crontab
 RUN chmod 777 schedule.sh
 RUN chmod 777 /etc/cron.d/crontab && crontab /etc/cron.d/crontab
 
-RUN cron
+RUN service cron restart
 
-CMD service cron restart
+CMD cron -f
