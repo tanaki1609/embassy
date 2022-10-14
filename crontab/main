@@ -1,0 +1,1 @@
+* * * * * /bin/bash /home/embassy/shell_scripts/schedule.sh >> /home/embassy/logfile.log
