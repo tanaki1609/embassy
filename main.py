@@ -1,20 +1,18 @@
-import datetime
 import json
-import random
 import time
-from pprint import pprint
-from datetime import datetime
-
+import datetime
 import requests
+from dateutil.relativedelta import relativedelta
+from contants import MONTHS_BY_POSITION
 
 
-def main():
+def check_date(date) -> bool:
     try:
         r = requests.post(url='https://consul.mofa.go.kr/ciph/0800/selectVisitReserveCalendarYes.do',
                           data={
                               'emblCd': 'KY',
                               'visitResveBussGrpCd': 'KY0001',
-                              'emblTime': '202210'
+                              'emblTime': f'{date.year}{date.month}'
                           },
                           headers={
                               'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -40,28 +38,25 @@ def main():
         data = [date['visitYn'].lower() for date in response['visitReserveCalendarYesResult']]
 
         if response and 'y' in data:
+            message = f'Есть место {MONTHS_BY_POSITION.get(date.month)}!'
             requests.post(
-                f'https://api.telegram.org/bot5430523711:AAHFQFT5_dfsZO04cmjQfQGHwMJXm3-YNoI/sendMessage?chat_id=353761483&text=ЕСТЬ место Октябрь!'
+                f'https://api.telegram.org/bot5430523711:AAHFQFT5_dfsZO04cmjQfQGHwMJXm3-YNoI/sendMessage?chat_id=353761483&text={message}'
             )
             return True
-        '''elif 'n' in data:
-            requests.post(
-                f'https://api.telegram.org/bot5430523711:AAHFQFT5_dfsZO04cmjQfQGHwMJXm3-YNoI/sendMessage?chat_id=353761483&text=НЕТ место Октябрь!'
-            )'''
     except:
         pass
     return False
 
 
 if __name__ == '__main__':
-    f = open("log.txt", "a")
+    now = datetime.datetime.now()
+    next_ = datetime.datetime.today() + relativedelta(months=1)
+
     a = time.perf_counter()
-    has_free_date = main()
+    check_date(now)
+    check_date(next_)
     b = time.perf_counter()
-    now = datetime.now()
+
     current_time = now.strftime("%H:%M:%S")
     print("Current Time =", current_time)
     print(str(b - a) + "_stop")
-    # if has_free_date:
-    f.writelines(f'{current_time}\n')
-    f.close()

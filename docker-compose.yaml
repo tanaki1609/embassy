@@ -1,8 +1,0 @@
-version: "3.8"
-
-services:
-  app:
-    build: .
-    volumes:
-      - .:/home/embassy
-    command: cron -f

@@ -8,9 +8,9 @@ COPY . .
 
 RUN pip3 install -r requirements.txt
 
-COPY crontab /etc/cron.d/crontab
+COPY crontab/main /etc/cron.d/crontab
 
-RUN chmod 777 schedule.sh
+RUN chmod 777 shell_scripts/schedule.sh
 RUN chmod 777 /etc/cron.d/crontab && crontab /etc/cron.d/crontab
 
 RUN service cron restart
