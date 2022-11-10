@@ -1,6 +1,7 @@
 import json
 import time
 import datetime
+
 import requests
 from dateutil.relativedelta import relativedelta
 from contants import MONTHS_BY_POSITION, HEADERS, BASE_URL
@@ -16,8 +17,11 @@ def check_date(date) -> bool:
                           },
                           headers=HEADERS)
         response = json.loads(r.content)
-        data = [date['visitYn'].lower() for date in response['visitReserveCalendarYesResult']]
 
+        data = [
+            v['visitYn'].lower()
+            for v in response['visitReserveCalendarYesResult'] if int(v['visitDe'][6:8]) >= date.day
+        ]
         if response and 'y' in data:
             message = f'Есть место {MONTHS_BY_POSITION.get(date.month)}!'
             requests.post(
