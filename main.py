@@ -20,8 +20,10 @@ def check_date(date) -> bool:
 
         data = [
             v['visitYn'].lower()
-            for v in response['visitReserveCalendarYesResult'] if int(v['visitDe'][6:8]) >= date.day
+            for v in response['visitReserveCalendarYesResult'] if
+            int(v['visitDe'][4:8]) >= int(f'{datetime.datetime.now().month}{date.day}')
         ]
+
         if response and 'y' in data:
             message = f'Есть место {MONTHS_BY_POSITION.get(date.month)}!'
             requests.post(
